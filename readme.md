@@ -57,3 +57,35 @@ select sum(population) from city where countrycode like 'JPN' group by countryco
 ```
 select round(lat_n,4) from station where lat_n = (select min(lat_n) from station where lat_n > 38.7780); 
 ```
+
+### stored function
+
+```
+CREATE DEFINER=`root`@`localhost` FUNCTION `new_function`(s char(20)) RETURNS char(50) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+RETURN concat('hello ', s,'!');
+END
+```
+![image](https://user-images.githubusercontent.com/122258263/220098581-6ae5364c-a7b8-477b-8446-86ef3d98d30c.png)
+
+
+### stored function for odd even number.
+```
+CREATE DEFINER=`root`@`localhost` FUNCTION `odd_even`(input_number int) RETURNS char(20) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+	declare v_isOdd char(20);
+    
+    if mod(input_number,2) = 0 then
+		set v_isOdd = concat(input_number ,' is Even');
+	else 
+		set v_isOdd = concat(input_number, ' is odd');
+	end if;
+    return v_isOdd;
+RETURN 1;
+END
+
+```
+![image](https://user-images.githubusercontent.com/122258263/220101827-5c9c1f05-e81a-45e7-bf3e-51516326bd1e.png)
+
