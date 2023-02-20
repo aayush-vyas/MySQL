@@ -58,19 +58,26 @@ select sum(population) from city where countrycode like 'JPN' group by countryco
 select round(lat_n,4) from station where lat_n = (select min(lat_n) from station where lat_n > 38.7780); 
 ```
 
-### stored function
 
+### stored procedure
 ```
-CREATE DEFINER=`root`@`localhost` FUNCTION `new_function`(s char(20)) RETURNS char(50) CHARSET utf8mb4
-    DETERMINISTIC
+USE `new_test`;
+DROP procedure IF EXISTS `new_procedure`;
+
+DELIMITER $$
+USE `new_test`$$
+CREATE PROCEDURE `new_procedure` (IN user_id INT, IN name_ins VARCHAR(50), IN email_ins VARCHAR(50))
 BEGIN
-RETURN concat('hello ', s,'!');
-END
+	 INSERT INTO new_test.user(user_id, name, email) VALUES(user_id, name_ins, email_ins);
+END$$
+
+DELIMITER ;
+
+
 ```
-![image](https://user-images.githubusercontent.com/122258263/220098581-6ae5364c-a7b8-477b-8446-86ef3d98d30c.png)
 
+### stored function to find number is odd or not.
 
-### stored function for odd even number.
 ```
 CREATE DEFINER=`root`@`localhost` FUNCTION `odd_even`(input_number int) RETURNS char(20) CHARSET utf8mb4
     DETERMINISTIC
@@ -78,14 +85,22 @@ BEGIN
 	declare v_isOdd char(20);
     
     if mod(input_number,2) = 0 then
-		set v_isOdd = concat(input_number ,' is Even');
+		set v_isOdd = "Even";
 	else 
-		set v_isOdd = concat(input_number, ' is odd');
+		set v_isOdd = "Odd";
 	end if;
     return v_isOdd;
 RETURN 1;
 END
+```
+
+### Prepared statement in mysql, in this example we used to call function new_procedure with ? as argument as prepared statement and we will insert the data in table
 
 ```
-![image](https://user-images.githubusercontent.com/122258263/220101827-5c9c1f05-e81a-45e7-bf3e-51516326bd1e.png)
-
+prepare stmt from 'call new_procedure(?,?,?)';
+set @id := 6;
+set @name := 'john doe';
+set @email := 'johndoe@gmail.com';
+execute stmt using @id, @name, @email;
+```
+![image](https://user-images.githubusercontent.com/122258263/220128586-cb611da5-2818-438f-beac-42eae0dbfd82.png)
