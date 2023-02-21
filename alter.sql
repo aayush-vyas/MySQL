@@ -30,9 +30,14 @@ add constraint uq_email unique(email);
 
 set SQL_SAFE_UPDATES = 0;
 
-delete from user where email is null;
+-- delete from user where email is null;
 
-select *from user;
+-- select *from user;
+
+-- see all the constraint
+select table_name, constraint_type, constraint_name from information_schema.table_constraints  where table_name = "user
 
 
-select table_name, constraint_type, constraint_name from information_schema.table_constraints  where table_name = "user";
+-- rename table name using alter 
+
+alter table table_name rename new_table_name
